@@ -1,33 +1,46 @@
-const express = require('express') // llamar express
-const app = express() //guardar en una constante toda la funcionalidad importada arriba | esta constante puedo usar para generar rutas o acciones
-const port = 8000 // puerto donde vamos a alojar nuestro servidor del backend
+require('./database/db')
 
+const express = require('express')
+const app = express()
 
-app.use(express.json()) //convertir datos | parsear
+const User = require('./models/usuario')
+
+const port = 8000
+
+app.use(express.json())
 app.use(express.urlencoded())
 
-app.get('/', (req, res) => { //app . (este punto puede llamar a GET, PATCH, PUT, POST, DELETE)
+app.post('/crear-usuario', async(req, res) => {
+
+  const {name, apellido, edad} = req.body
+
+  const nuevoUsuario = new User({
+    name,
+    apellido,
+    edad
+  })
+
+  nuevoUsuario.save()
+
+  res.json({
+    message: `usuario ${name} ${apellido} creado exitosamente`,
+    response
+  })
+})
+
+app.get('/', (req, res) => {
   res.send('Mensaje enviado')
 })
 
 app.delete('/delete', (req, res) => {
-  res.status(404).json({ //mandar el status
-    message: "Eliminación exitosa", //generalmente siempre mandaremos objetos
+  res.status(404).json({
+    message: "Creación de usuario exitosa",
     id: 404
   })
 })
 
-app.post('/crear-usuario/', (req, res) => { //crear algo en la base de datos
-  // console.log(req.body) //se requiere del front con esto
 
-  const {name,apellido} = req.body
-
-  res.json({
-    message: `usuario ${name} ${apellido} creado exitosamente`
-  })
-})
-
-app.patch('/editar-usuario/:name/:apellido', (req,res) =>{ //modificar partes del objeto
+app.patch('/editar-usuario/:name/:apellido', (req,res) =>{
   const {name, apellido} = req.params
 
   res.json({
@@ -35,7 +48,7 @@ app.patch('/editar-usuario/:name/:apellido', (req,res) =>{ //modificar partes de
   })
 })
 
-app.put('/editar-partes-usuario/:name/:apellido', (req,res) =>{ //modificar partes del objeto
+app.put('/editar-partes-usuario/:name/:apellido', (req,res) =>{
   const {name, apellido} = req.params
   const {edad} = req.body
 
@@ -47,5 +60,5 @@ app.put('/editar-partes-usuario/:name/:apellido', (req,res) =>{ //modificar part
 })
 
 app.listen(port, () => {
-  console.log(`Servidor corriendo en puerto ${8000}`) //ver el resultado del puerto
+  console.log(`Servidor corriendo en puerto ${8000}`)
 })
