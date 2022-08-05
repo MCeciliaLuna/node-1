@@ -35,6 +35,17 @@ app.patch('/editar-usuario/:name/:apellido', (req,res) =>{ //modificar partes de
   })
 })
 
+app.put('/editar-partes-usuario/:name/:apellido', (req,res) =>{ //modificar partes del objeto
+  const {name, apellido} = req.params
+  const {edad} = req.body
+
+  res.json({
+    name,
+    apellido,
+    edad
+  })
+})
+
 app.listen(port, () => {
   console.log(`Servidor corriendo en puerto ${8000}`) //ver el resultado del puerto
 })
